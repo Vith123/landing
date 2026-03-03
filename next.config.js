@@ -10,7 +10,12 @@ const nextConfig = {
       },
       {
         protocol: 'https',
-        hostname: '**.railway.app',
+        hostname: '**.onrender.com',
+        pathname: '/uploads/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'backend-landing-ft03.onrender.com',
         pathname: '/uploads/**',
       },
       {
