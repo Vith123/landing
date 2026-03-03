@@ -5,7 +5,8 @@ import ProductSection from '@/components/ProductSection';
 import { fetchAPI } from '@/lib/api';
 import Link from 'next/link';
 
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 async function getPosts(page = 1, category = '', search = '', sort = 'newest') {
   try {
