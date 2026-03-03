@@ -22,6 +22,14 @@ export default function EditProductPage() {
   const [existingImage, setExistingImage] = useState(null);
   const API_URL = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:5000';
 
+  // Helper function to get proper image URL
+  const getImageUrl = (imagePath) => {
+    if (!imagePath) return null;
+    if (imagePath.startsWith('http')) return imagePath;
+    const cleanPath = imagePath.startsWith('/') ? imagePath : `/${imagePath}`;
+    return `${API_URL}${cleanPath}`;
+  };
+
   const categories = [
     { value: 'gaming', label: 'Gaming' },
     { value: 'keyboard', label: 'Keyboards' },
@@ -42,7 +50,7 @@ export default function EditProductPage() {
         setPrice(product.price || '');
         setCategory(product.category || 'gaming');
         if (product.cover_image) {
-          setExistingImage(`${API_URL}${product.cover_image}`);
+          setExistingImage(getImageUrl(product.cover_image));
         }
       } catch (error) {
         setError('Failed to load product');

@@ -12,6 +12,14 @@ export default function ProductsPage() {
   const [deleting, setDeleting] = useState(null);
   const API_URL = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:5000';
 
+  // Handle both Cloudinary URLs and local uploads
+  const getImageUrl = (imagePath) => {
+    if (!imagePath) return null;
+    if (imagePath.startsWith('http')) return imagePath;
+    const cleanPath = imagePath.startsWith('/') ? imagePath : `/${imagePath}`;
+    return `${API_URL}${cleanPath}`;
+  };
+
   useEffect(() => {
     fetchProducts();
   }, []);
@@ -99,7 +107,7 @@ export default function ProductsPage() {
                       <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-800 flex-shrink-0">
                         {product.cover_image ? (
                           <img
-                            src={`${API_URL}${product.cover_image}`}
+                            src={getImageUrl(product.cover_image)}
                             alt={product.title}
                             className="w-full h-full object-cover"
                           />

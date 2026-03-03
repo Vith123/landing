@@ -9,7 +9,9 @@ const PostCard = ({ post }) => {
   const getImageUrl = (imagePath) => {
     if (!imagePath) return null;
     if (imagePath.startsWith('http')) return imagePath;
-    return `${API_URL}${imagePath}`;
+    // Ensure path starts with /
+    const cleanPath = imagePath.startsWith('/') ? imagePath : `/${imagePath}`;
+    return `${API_URL}${cleanPath}`;
   };
 
   // Use actual price from post, or default to 0

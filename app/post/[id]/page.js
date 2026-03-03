@@ -22,6 +22,13 @@ export async function generateMetadata({ params }) {
   }
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:5000';
+  
+  const getImageUrl = (imagePath) => {
+    if (!imagePath) return null;
+    if (imagePath.startsWith('http')) return imagePath;
+    const cleanPath = imagePath.startsWith('/') ? imagePath : `/${imagePath}`;
+    return `${API_URL}${cleanPath}`;
+  };
 
   return {
     title: post.title,
@@ -32,13 +39,13 @@ export async function generateMetadata({ params }) {
       type: 'article',
       publishedTime: post.created_at || post.createdAt,
       authors: [post.author_name],
-      images: post.cover_image ? [`${API_URL}${post.cover_image}`] : [],
+      images: post.cover_image ? [getImageUrl(post.cover_image)] : [],
     },
     twitter: {
       card: 'summary_large_image',
       title: post.title,
       description: post.excerpt,
-      images: post.cover_image ? [`${API_URL}${post.cover_image}`] : [],
+      images: post.cover_image ? [getImageUrl(post.cover_image)] : [],
     },
   };
 }

@@ -14,6 +14,14 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const API_URL = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:5000';
 
+  // Helper function to get proper image URL
+  const getImageUrl = (imagePath) => {
+    if (!imagePath) return null;
+    if (imagePath.startsWith('http')) return imagePath;
+    const cleanPath = imagePath.startsWith('/') ? imagePath : `/${imagePath}`;
+    return `${API_URL}${cleanPath}`;
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -177,7 +185,7 @@ export default function DashboardPage() {
                 <div className="w-12 h-12 rounded-lg overflow-hidden bg-gray-800 flex-shrink-0">
                   {product.cover_image ? (
                     <img
-                      src={`${API_URL}${product.cover_image}`}
+                      src={getImageUrl(product.cover_image)}
                       alt={product.title}
                       className="w-full h-full object-cover"
                     />

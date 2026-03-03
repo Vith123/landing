@@ -14,7 +14,9 @@ export default function PostContent({ post: initialPost }) {
   const getImageUrl = (imagePath) => {
     if (!imagePath) return null;
     if (imagePath.startsWith('http')) return imagePath;
-    return `${API_URL}${imagePath}`;
+    // Ensure path starts with /
+    const cleanPath = imagePath.startsWith('/') ? imagePath : `/${imagePath}`;
+    return `${API_URL}${cleanPath}`;
   };
 
   const imageUrl = getImageUrl(post.cover_image);
