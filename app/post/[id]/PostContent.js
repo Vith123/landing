@@ -8,6 +8,7 @@ import { formatDistanceToNow } from 'date-fns';
 export default function PostContent({ post: initialPost }) {
   const [post] = useState(initialPost);
   const API_URL = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:5000';
+  const TELEGRAM_USERNAME = process.env.NEXT_PUBLIC_TELEGRAM_USERNAME || 'chhunchandevit';
   const postId = post.id || post._id;
 
   // Handle both Cloudinary URLs (https://) and local uploads (/uploads/)
@@ -25,6 +26,12 @@ export default function PostContent({ post: initialPost }) {
   const price = parseFloat(post.price) || 0;
   const originalPrice = price > 0 ? (price * 1.3).toFixed(2) : 0;
   const discount = originalPrice > 0 ? Math.floor(((originalPrice - price) / originalPrice) * 100) : 0;
+
+  // Generate Telegram link with product info
+  const getTelegramLink = () => {
+    const message = `Hi! I'm interested in buying:\n\n📦 Product: ${post.title}\n💰 Price: ${price > 0 ? `$${price.toFixed(2)}` : 'Contact for price'}\n🔗 Link: ${typeof window !== 'undefined' ? window.location.href : ''}\n\nPlease let me know if it's available!`;
+    return `https://t.me/${TELEGRAM_USERNAME}?text=${encodeURIComponent(message)}`;
+  };
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -138,6 +145,24 @@ export default function PostContent({ post: initialPost }) {
                 <span>24/7 Support</span>
               </div>
             </div>
+
+            {/* Buy Now Button - Telegram */}
+            <a
+              href={getTelegramLink()}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full flex items-center justify-center gap-3 bg-gradient-to-r from-[#0088cc] to-[#00b4d8] hover:from-[#0077b5] hover:to-[#00a3c4] text-white font-bold py-4 px-6 rounded-xl transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg hover:shadow-cyan-500/30"
+            >
+              <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0C5.374 0 0 5.373 0 12c0 6.627 5.374 12 12 12 6.626 0 12-5.373 12-12 0-6.628-5.374-12-12-12zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z"/>
+              </svg>
+              <span className="text-lg">Buy Now via Telegram</span>
+            </a>
+
+            {/* Alternative Contact */}
+            <p className="text-center text-gray-400 text-sm">
+              Contact us on Telegram to purchase this product. Fast response guaranteed!
+            </p>
           </div>
         </div>
 

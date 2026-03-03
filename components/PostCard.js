@@ -3,6 +3,7 @@ import Image from 'next/image';
 
 const PostCard = ({ post }) => {
   const API_URL = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:5000';
+  const TELEGRAM_USERNAME = process.env.NEXT_PUBLIC_TELEGRAM_USERNAME || 'chhunchandevit';
   const postId = post.id || post._id;
 
   // Handle both Cloudinary URLs (https://) and local uploads (/uploads/)
@@ -21,6 +22,12 @@ const PostCard = ({ post }) => {
   const discount = originalPrice > 0 ? Math.floor(((originalPrice - price) / originalPrice) * 100) : 0;
 
   const imageUrl = getImageUrl(post.cover_image);
+
+  // Generate Telegram link with product info
+  const getTelegramLink = () => {
+    const message = `Hi! I'm interested in:\n\n📦 ${post.title}\n💰 ${price > 0 ? `$${price.toFixed(2)}` : 'Contact for price'}\n\nIs it available?`;
+    return `https://t.me/${TELEGRAM_USERNAME}?text=${encodeURIComponent(message)}`;
+  };
 
   return (
     <article className="gaming-card group relative overflow-hidden border border-purple-500/20 hover:border-purple-500/50">
@@ -97,13 +104,24 @@ const PostCard = ({ post }) => {
         </div>
 
         {/* Actions */}
-        <div className="mt-4">
+        <div className="mt-4 flex gap-2">
           <Link 
             href={`/post/${postId}`}
-            className="btn-3d block w-full bg-gradient-to-r from-purple-600 to-purple-500 text-white text-center py-2.5 rounded-lg font-medium text-sm hover:from-purple-500 hover:to-cyan-500 hover:shadow-[0_0_30px_rgba(139,92,246,0.5)] transition-all duration-300"
+            className="btn-3d flex-1 bg-gradient-to-r from-purple-600 to-purple-500 text-white text-center py-2.5 rounded-lg font-medium text-sm hover:from-purple-500 hover:to-cyan-500 hover:shadow-[0_0_30px_rgba(139,92,246,0.5)] transition-all duration-300"
           >
             View Details
           </Link>
+          <a
+            href={getTelegramLink()}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-3d flex items-center justify-center bg-gradient-to-r from-[#0088cc] to-[#00b4d8] text-white px-3 rounded-lg hover:from-[#0077b5] hover:to-[#00a3c4] hover:shadow-[0_0_20px_rgba(0,136,204,0.5)] transition-all duration-300"
+            title="Buy via Telegram"
+          >
+            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 0C5.374 0 0 5.373 0 12c0 6.627 5.374 12 12 12 6.626 0 12-5.373 12-12 0-6.628-5.374-12-12-12zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z"/>
+            </svg>
+          </a>
         </div>
       </div>
     </article>
