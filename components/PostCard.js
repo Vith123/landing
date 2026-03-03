@@ -5,11 +5,20 @@ const PostCard = ({ post }) => {
   const API_URL = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:5000';
   const postId = post.id || post._id;
 
+  // Handle both Cloudinary URLs (https://) and local uploads (/uploads/)
+  const getImageUrl = (imagePath) => {
+    if (!imagePath) return null;
+    if (imagePath.startsWith('http')) return imagePath;
+    return `${API_URL}${imagePath}`;
+  };
+
   // Generate a mock price based on post id for demo
   const price = (29.99 + (postId?.toString().charCodeAt(0) * 7.5) % 170).toFixed(2);
   const originalPrice = (parseFloat(price) * 1.3).toFixed(2);
   const isNew = new Date(post.created_at || post.createdAt) > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
   const discount = Math.floor(((originalPrice - price) / originalPrice) * 100);
+
+  const imageUrl = getImageUrl(post.cover_image);
 
   return (
     <article className="gaming-card group relative overflow-hidden border border-purple-500/20 hover:border-purple-500/50">
@@ -27,10 +36,10 @@ const PostCard = ({ post }) => {
       {/* Product Image */}
       <Link href={`/post/${postId}`}>
         <div className="relative w-full h-52 bg-gradient-to-br from-[#1a1a2e] to-[#2d2d44] overflow-hidden">
-          {post.cover_image ? (
+          {imageUrl ? (
             <div className="relative w-full h-full product-float">
               <Image
-                src={`${API_URL}${post.cover_image}`}
+                src={imageUrl}
                 alt={post.title}
                 fill
                 className="object-cover transition-all duration-700 group-hover:scale-110"

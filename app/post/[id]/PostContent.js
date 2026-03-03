@@ -10,6 +10,15 @@ export default function PostContent({ post: initialPost }) {
   const API_URL = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:5000';
   const postId = post.id || post._id;
 
+  // Handle both Cloudinary URLs (https://) and local uploads (/uploads/)
+  const getImageUrl = (imagePath) => {
+    if (!imagePath) return null;
+    if (imagePath.startsWith('http')) return imagePath;
+    return `${API_URL}${imagePath}`;
+  };
+
+  const imageUrl = getImageUrl(post.cover_image);
+
   // Mock price for demo
   const price = (29.99 + (postId?.toString().charCodeAt(0) * 7.5) % 170).toFixed(2);
   const originalPrice = (parseFloat(price) * 1.3).toFixed(2);
@@ -31,9 +40,9 @@ export default function PostContent({ post: initialPost }) {
           {/* Product Image */}
           <div className="game-card p-4">
             <div className="relative w-full aspect-square bg-gradient-to-br from-[#1a1a2e] to-[#2d2d44] rounded-lg overflow-hidden group">
-              {post.cover_image ? (
+              {imageUrl ? (
                 <Image
-                  src={`${API_URL}${post.cover_image}`}
+                  src={imageUrl}
                   alt={post.title}
                   fill
                   className="object-contain p-4 transition-all duration-700 group-hover:scale-110"
