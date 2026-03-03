@@ -18,7 +18,8 @@ export default function DashboardPage() {
     const fetchData = async () => {
       try {
         const res = await api.get('/posts');
-        const products = res.data;
+        // Handle both array and { posts: [] } response format
+        const products = Array.isArray(res.data) ? res.data : (res.data.posts || []);
         
         setStats({
           totalProducts: products.length,

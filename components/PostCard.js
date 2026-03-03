@@ -12,11 +12,11 @@ const PostCard = ({ post }) => {
     return `${API_URL}${imagePath}`;
   };
 
-  // Generate a mock price based on post id for demo
-  const price = (29.99 + (postId?.toString().charCodeAt(0) * 7.5) % 170).toFixed(2);
-  const originalPrice = (parseFloat(price) * 1.3).toFixed(2);
+  // Use actual price from post, or default to 0
+  const price = parseFloat(post.price) || 0;
+  const originalPrice = price > 0 ? (price * 1.3).toFixed(2) : 0;
   const isNew = new Date(post.created_at || post.createdAt) > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-  const discount = Math.floor(((originalPrice - price) / originalPrice) * 100);
+  const discount = originalPrice > 0 ? Math.floor(((originalPrice - price) / originalPrice) * 100) : 0;
 
   const imageUrl = getImageUrl(post.cover_image);
 
@@ -85,8 +85,10 @@ const PostCard = ({ post }) => {
         {/* Price */}
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <span className="text-xl font-bold text-cyan-400 group-hover:text-cyan-300 transition">${price}</span>
-            {discount > 15 && (
+            <span className="text-xl font-bold text-cyan-400 group-hover:text-cyan-300 transition">
+              {price > 0 ? `$${price.toFixed(2)}` : 'Contact for price'}
+            </span>
+            {discount > 15 && price > 0 && (
               <span className="text-sm text-gray-500 line-through">${originalPrice}</span>
             )}
           </div>

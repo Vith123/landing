@@ -19,10 +19,10 @@ export default function PostContent({ post: initialPost }) {
 
   const imageUrl = getImageUrl(post.cover_image);
 
-  // Mock price for demo
-  const price = (29.99 + (postId?.toString().charCodeAt(0) * 7.5) % 170).toFixed(2);
-  const originalPrice = (parseFloat(price) * 1.3).toFixed(2);
-  const discount = Math.floor(((originalPrice - price) / originalPrice) * 100);
+  // Use actual price from post
+  const price = parseFloat(post.price) || 0;
+  const originalPrice = price > 0 ? (price * 1.3).toFixed(2) : 0;
+  const discount = originalPrice > 0 ? Math.floor(((originalPrice - price) / originalPrice) * 100) : 0;
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -84,8 +84,10 @@ export default function PostContent({ post: initialPost }) {
             {/* Price */}
             <div className="game-card p-4">
               <div className="flex items-baseline space-x-3">
-                <span className="text-4xl font-bold text-cyan-400">${price}</span>
-                {discount > 15 && (
+                <span className="text-4xl font-bold text-cyan-400">
+                  {price > 0 ? `$${price.toFixed(2)}` : 'Contact for price'}
+                </span>
+                {discount > 15 && price > 0 && (
                   <>
                     <span className="text-xl text-gray-500 line-through">${originalPrice}</span>
                     <span className="text-green-400 font-medium">Save ${(originalPrice - price).toFixed(2)}</span>
