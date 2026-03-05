@@ -1,13 +1,14 @@
-'use client';
+"use client";
 
-import { usePathname } from 'next/navigation';
-import Navbar from './Navbar';
-import Footer from './Footer';
+import { usePathname } from "next/navigation";
+import Navbar from "./Navbar";
+import Footer from "./Footer";
+import FloatingTelegram from "./FloatingTelegram";
 
 export default function LayoutWrapper({ children }) {
   const pathname = usePathname();
-  const isDashboard = pathname?.startsWith('/dashboard');
-  const isAdminAuth = pathname?.startsWith('/admin/dashboard/v1');
+  const isDashboard = pathname?.startsWith("/dashboard");
+  const isAdminAuth = pathname?.startsWith("/admin/dashboard/v1");
 
   // Dashboard has its own layout, don't show main Navbar/Footer
   if (isDashboard) {
@@ -23,10 +24,9 @@ export default function LayoutWrapper({ children }) {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      <main className="flex-grow">
-        {children}
-      </main>
+      <main className="flex-grow">{children}</main>
       <Footer />
+      <FloatingTelegram />
     </div>
   );
 }
